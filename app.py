@@ -1,65 +1,55 @@
-from dash import Dash, dcc, Input, Output
-
+from dash import Dash, html
+from views import hurricane, nba
 import dash_bootstrap_components as dbc
-import pandas as pd
-import numpy as np
-import plotly.express as px
 
-dataFrame = pd.read_csv(
-    "/Users/dehang/hack/py-dash/dataset/atlanticHurricanes.csv")
-print(dataFrame.head(), dataFrame['Date'])
 
-# format various columns in csv data
-dataFrame['Date'] = dataFrame['Date'].astype(str).str[:4].astype(int)
-
-dataFrame['Name'] = dataFrame['Name'].str.strip()
-
-dataFrame["Latitude"] = np.where(dataFrame["Latitude"].str.endswith(
-    "N"), dataFrame["Latitude"].str[:-1].astype(float), -dataFrame["Latitude"].str[:-1].astype(float))
-
-dataFrame["Longitude"] = np.where(dataFrame["Longitude"].str.endswith(
-    "W"), -dataFrame["Longitude"].str[:-1].astype(float), dataFrame["Longitude"].str[:-1].astype(float))
-print(dataFrame.head())
-
-# Dash Components
 app = Dash(__name__, external_stylesheets=[dbc.themes.FLATLY])
-title = dcc.Markdown(children="# Sample Graphs Built with Python Dash")
-atlantic_hurricanes = dcc.Graph(figure={})
-slider = dcc.RangeSlider(2000, 2015, 1,
-                         value=[2003, 2008],
-                         marks={2000: '2000', 2005: '2005',
-                                2010: '2010', 2015: '2015'},
-                         tooltip={"placement": "bottom",
-                                  "always_visible": True},
-                         id='range-slider')
+jumbotron = html.Div(
+    dbc.Container(
+        [
+            html.H1("Sample Graphs Built with Python Dash",
+                    className="display-3 text-light"),
+            html.P(
+                "No Javascript needed, everything on this screen is written in Python with Dash framework.",
+                className="lead text-light",
+            ),
+            html.Hr(className="my-2 bg-white"),
+            html.P(
+                "Dash uses Plotly for graphing capabilities. Click the link below to see documentations from Dash.", className="text-light"
+            ),
+            html.P(
+                dbc.Button("Learn more", color="info", external_link=True, href="https://dash.plotly.com"), className="lead"
+            ),
+        ],
+        fluid=True,
+        class_name="py-3",
+    ),
+    className="p-2 bg-primary rounded-3",
+    style={"margin-top": "10px"}
+)
 
+tabs = dbc.Card(
+    [
+        dbc.CardHeader(
+            dbc.Tabs(
+                [
+                    dbc.Tab(hurricane.atlantic_hurricanes_tab,
+                            label="Atlantic Hurricanes"),
+                    dbc.Tab(nba.int_players_tab,
+                            label="International NBA Players"),
+                    dbc.Tab(nba.pts_country_tab,
+                            label="Points by International Players"),
+                    dbc.Tab(nba.player_map_tab,
+                            label="Map of International Players")
 
-@app.callback(
-    Output(atlantic_hurricanes, 'figure'),
-    [Input('range-slider', 'value')])
-def update_graph(yearRange):
-    start, end = yearRange
-    filtered = dataFrame[dataFrame['Date'].between(start, end)]
+                ]
+            )
+        )
+    ],
+    style={"margin-top": "10px", "margin-bottom": "20px"}
+)
 
-    fig = px.density_mapbox(
-        filtered,
-        title='Atlantic Hurricanes ({}-{})'.format(start, end),
-        lat='Latitude',
-        lon='Longitude',
-        z='Maximum Wind',
-        labels={'Maximum Wind': 'Max Wind Speed (KN)'},
-        hover_data=['Latitude', 'Longitude', 'Maximum Wind', 'Date', 'Name'],
-        radius=10,
-        custom_data=['Date'],
-        center=dict(lat=18, lon=-50),
-        zoom=3,
-        mapbox_style="stamen-terrain",
-        height=800)
-
-    return fig
-
-
-app.layout = dbc.Container([title, atlantic_hurricanes, slider])
+app.layout = dbc.Container([jumbotron, tabs])
 
 # Run app
 if __name__ == '__main__':
