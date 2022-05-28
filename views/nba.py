@@ -18,29 +18,31 @@ int_players_df = nba_df.merge(
 
 int_players = dcc.Graph(figure=px.area(
     int_players_df,
-    title="# of Foreign Players by Country",
+    title="# of International NBA Players by Country",
     x="season",
     y="count",
     hover_data=["country", "season"],
     color="country",
     pattern_shape="country",
-    height=600
+    height=800
 ))
 
 pts_country = dcc.Graph(figure=px.scatter(
     int_players_df,
-    title="Points by Foreign Players",
+    title="Points by International NBA Players",
     x="season",
     y="pts",
     size="count",
     color="country",
     hover_name="player_name",
     log_x=True,
-    size_max=60
+    size_max=60,
+    height=800
 ))
 
 animated_bubble_map = dcc.Graph(figure=px.scatter_geo(
     int_players_df,
+    title="Animated Timeline of International NBA Players",
     locations="country",
     locationmode="country names",
     color="country",

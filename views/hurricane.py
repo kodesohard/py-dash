@@ -34,7 +34,7 @@ def update_hurr_graph(yearRange):
 
     fig = px.density_mapbox(
         filtered,
-        title='year(s) {} - {}'.format(start, end),
+        title='Year(s) {} - {}'.format(start, end),
         lat='Latitude',
         lon='Longitude',
         z='Maximum Wind',
