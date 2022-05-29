@@ -4,13 +4,15 @@ import dash_bootstrap_components as dbc
 
 
 app = Dash(__name__, external_stylesheets=[dbc.themes.FLATLY])
+server = app.server
+
 jumbotron = html.Div(
     dbc.Container(
         [
-            html.H1("Sample Graphs Built with Python Dash",
+            html.H1("Sample Graphs Built with Dash & Plotly Express",
                     className="display-3 text-light"),
             html.P(
-                "No Javascript needed, everything on this screen is written in Python with Dash framework.",
+                "No Javascript needed, everything on this screen is written in Python with Dash framework and Plotly Express.",
                 className="lead text-light",
             ),
             html.Hr(className="my-2 bg-white"),
@@ -40,7 +42,9 @@ tabs = dbc.Card(
                     dbc.Tab(nba.pts_country_tab,
                             label="Points by International Players"),
                     dbc.Tab(nba.player_map_tab,
-                            label="Map of International Players")
+                            label="Map of International Players"),
+                    dbc.Tab(nba.points_draft_tab,
+                            label="Points by Draft Round")
 
                 ]
             )

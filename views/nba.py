@@ -54,6 +54,17 @@ animated_bubble_map = dcc.Graph(figure=px.scatter_geo(
     size_max=70
 ))
 
+points_draft = dcc.Graph(figure=px.scatter(
+    nba_df,
+    x="player_name",
+    y="pts",
+    facet_col="draft_round",
+    hover_name="player_name",
+    hover_data=["pts", "reb", "ast", "net_rating", "draft_number"],
+    height=700
+))
+
+
 int_players_tab = dbc.Card(
     dbc.CardBody(
         [int_players]
@@ -71,6 +82,13 @@ pts_country_tab = dbc.Card(
 player_map_tab = dbc.Card(
     dbc.CardBody(
         [animated_bubble_map]
+    ),
+    class_name="mt-3",
+)
+
+points_draft_tab = dbc.Card(
+    dbc.CardBody(
+        [points_draft]
     ),
     class_name="mt-3",
 )
